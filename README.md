@@ -1,1 +1,3 @@
-# template_wordpress
+# Wordpress 🐙
+
+Dockerized Wordpress Stack Template.
