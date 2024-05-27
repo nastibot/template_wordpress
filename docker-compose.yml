@@ -1,0 +1,55 @@
+version: "3.2"
+
+services:
+ mysql:
+  container_name: mysql
+  image: mysql:5.7
+  restart: always
+  ports:
+   - 3306:3306
+  environment:
+   MYSQL_DATABASE: wp_dockerized
+   MYSQL_ROOT_PASSWORD: root
+   MYSQL_USER: user
+   MYSQL_PASSWORD: user
+  networks:
+  - network
+
+ wordpress:
+  container_name: wordpress
+  image: wordpress:latest
+  restart: always
+  ports:
+   - 8765:80
+  environment:
+   WORDPRESS_DB_HOST: mysql
+   WORDPRESS_TABLE_PREFIX: wp_
+   WORDPRESS_DB_NAME: wp_dockerized
+   WORDPRESS_DB_USER: user
+   WORDPRESS_DB_PASSWORD: user
+  volumes:
+   ["./:/var/www/html"]
+  networks:
+  - network
+  depends_on:
+   - mysql
+
+ adminer:
+  container_name: adminer
+  image: adminer:4.5
+  restart: unless-stopped
+  environment:
+   ADMINER_DEFAULT_SERVER: mysql
+   ADMINER_DEFAULT_DB_NAME: wp_dockerized
+  ports:
+   - 8080:8080
+  networks:
+  - network
+  depends_on:
+   - mysql
+
+volumes:
+ mysql:
+
+networks:
+ network:
